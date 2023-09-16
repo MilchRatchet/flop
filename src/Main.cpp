@@ -10,6 +10,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #undef APIENTRY
+#include "nfd.hpp"
 #include <CLI/CLI.hpp>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_vulkan.h>
@@ -62,6 +63,8 @@ void on_scroll(GLFWwindow* window, double x_offset, double y_offset)
 void on_mouse_click(GLFWwindow* window, int button, int action, int mods)
 {
     s_ui.on_click(window, button, action);
+
+    ImGui_ImplGlfw_MouseButtonCallback(s_window, button, action, mods);
 }
 
 void set_pan_zoom_callbacks()

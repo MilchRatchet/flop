@@ -9,8 +9,7 @@
 using namespace flop;
 
 static nfdfilteritem_t s_filter_list[] = {{"Images", "png,jpg,jpeg,bmp,exr"}};
-static nfdfilteritem_t s_output_list[]    = {{"PNG", "png"}};
-
+static nfdfilteritem_t s_output_list[] = {{"PNG", "png"}};
 
 extern void flop_init_reference(char const* reference_path);
 extern void flop_init_test(char const* test_path);
@@ -256,7 +255,7 @@ void UI::update()
 
         if (ImGui::SliderFloat("Exposure", &exposure_, -15.f, 3.f))
         {
-            float exposure = std::powf(2.f, exposure_);
+            float exposure = std::pow(2.f, exposure_);
             left_preview_.set_exposure(exposure);
             right_preview_.set_exposure(exposure);
         }
@@ -420,16 +419,15 @@ void UI::render(GLFWwindow* window, VkCommandBuffer cb)
 
         switch (view_mode_)
         {
-            using enum ViewMode;
-        case Source:
+        case ViewMode::Source:
             left_preview_.set_image(left.source_);
             right_preview_.set_image(right.source_);
             break;
-        case YyCxCz:
+        case ViewMode::YyCxCz:
             left_preview_.set_image(left.yycxcz_);
             right_preview_.set_image(right.yycxcz_);
             break;
-        case FilteredSource:
+        case ViewMode::FilteredSource:
             left_preview_.set_image(left.yycxcz_blurred_);
             right_preview_.set_image(right.yycxcz_blurred_);
             break;

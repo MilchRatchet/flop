@@ -1,5 +1,7 @@
 #include "Buffer.hpp"
 
+#include <cstring>
+
 using namespace flop;
 
 uint32_t s_buffer_count;

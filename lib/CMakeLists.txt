@@ -4,7 +4,7 @@ include(FetchContent)
 FetchContent_Declare(
     stb
     GIT_REPOSITORY https://github.com/nothings/stb
-    GIT_TAG af1a5bc352164740c1cc1354942b1c6b72eacb8a # 2021 09 10
+    GIT_TAG master
     GIT_SHALLOW ON
 )
 if(NOT stb_POPULATED)
@@ -20,7 +20,7 @@ endif()
 FetchContent_Declare(
     volk
     GIT_REPOSITORY https://github.com/zeux/volk
-    GIT_TAG 1.2.198
+    GIT_TAG 1.3.250
     GIT_SHALLOW ON
 )
 FetchContent_MakeAvailable(volk)

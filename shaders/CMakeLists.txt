@@ -57,7 +57,7 @@ add_spv(YyCxCz.hlsl YyCxCz.spv ps_6_6 PSMain)
 configure_file(HexToLib.cmake ${SHADER_BIN}/CMakeLists.txt)
 
 add_custom_command(
-    OUTPUT ${SHADER_BIN}/$<CONFIG>/flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX}
+    OUTPUT ${SHADER_BIN}/${CMAKE_STATIC_LIBRARY_PREFIX}flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX}
     COMMAND ${CMAKE_COMMAND} -E rm -rf ${SHADER_BIN}/CMakeCache.txt
     COMMAND ${CMAKE_COMMAND} -E rm -rf ${SHADER_BIN}/CMakeFiles
     COMMAND ${CMAKE_COMMAND} -E rm -rf ${SHADER_BIN}/Debug
@@ -69,11 +69,11 @@ add_custom_command(
 )
 add_custom_target(
     flop_shaders_hex_lib
-    DEPENDS ${SHADER_BIN}/$<CONFIG>/flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX})
+    DEPENDS ${SHADER_BIN}/${CMAKE_STATIC_LIBRARY_PREFIX}flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX})
 add_library(flop_shaders INTERFACE)
 target_link_libraries(
     flop_shaders
-    INTERFACE ${SHADER_BIN}/$<CONFIG>/flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX})
+    INTERFACE ${SHADER_BIN}/${CMAKE_STATIC_LIBRARY_PREFIX}flop_shaders_hex${CMAKE_STATIC_LIBRARY_SUFFIX})
 target_include_directories(
     flop_shaders
     INTERFACE ${SHADER_BIN}

@@ -4,6 +4,7 @@
 #include <chrono>
 #include <cmath>
 #include <cstdio>
+#include <cstring>
 #include <filesystem>
 #include <iostream>
 #include <vector>
@@ -305,7 +306,8 @@ static int create_device(char const* preferred_device, bool swapchain)
         .enabledLayerCount    = 0,
         .ppEnabledLayerNames  = nullptr,
         .enabledExtensionCount
-        = sizeof(device_exts) / sizeof(char const*) - (swapchain ? 0 : 1),
+        = (uint32_t)(sizeof(device_exts) / sizeof(char const*)
+                     - (swapchain ? 0 : 1)),
         .ppEnabledExtensionNames = device_exts,
         .pEnabledFeatures        = &features};
 
@@ -326,7 +328,7 @@ static int create_device(char const* preferred_device, bool swapchain)
 
     VmaVulkanFunctions vulkan_functions{
         .vkGetInstanceProcAddr = vkGetInstanceProcAddr,
-        .vkGetDeviceProcAddr = vkGetDeviceProcAddr,
+        .vkGetDeviceProcAddr   = vkGetDeviceProcAddr,
     };
 
     VmaAllocatorCreateInfo allocator_info{
@@ -704,7 +706,7 @@ int flop_analyze_impl(char const* reference_path,
     if (g_reference.source_.hdr_)
     {
         data.tonemap  = tonemap;
-        data.exposure = std::powf(2.f, exposure);
+        data.exposure = std::pow(2.f, exposure);
     }
     else
     {
@@ -935,7 +937,8 @@ int flop_analyze_impl(char const* reference_path,
     auto end_time = std::chrono::high_resolution_clock::now();
 
     auto delta = end_time - start_time;
-    int elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(delta).count();
+    int elapsed
+        = std::chrono::duration_cast<std::chrono::milliseconds>(delta).count();
     if (out_summary)
     {
         out_summary->milliseconds_elapsed = elapsed;

@@ -24,7 +24,7 @@ FetchContent_Declare(
 FetchContent_Declare(
     nfd
     GIT_REPOSITORY https://github.com/btzy/nativefiledialog-extended.git
-    GIT_TAG 28ade5a5cc5d17cea8fe4034572cac8fd54eb53f
+    GIT_TAG v1.1.0
     GIT_SHALLOW ON
 )
 
@@ -33,7 +33,7 @@ FetchContent_MakeAvailable(cli11 glfw nfd)
 FetchContent_Declare(
     imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui
-    GIT_TAG v1.86
+    GIT_TAG v1.89.9
     GIT_SHALLOW ON
 )
 if(NOT imgui_POPULATED)

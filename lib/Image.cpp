@@ -1,11 +1,13 @@
 #include "Image.hpp"
 
-#include <tinyexr.h>
 #include <iostream>
+#include <tinyexr.h>
 
 // Forward declare STBI calls to avoid including a massive header
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
+
 extern "C"
 {
     unsigned char* stbi_load(char const* filename,
@@ -55,7 +57,8 @@ void init_from_data(void* image_data, int bytes_per_channel, Image& image)
     };
     VkBufferCreateInfo staging_info{
         .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-        .size  = static_cast<VkDeviceSize>(image.width_ * image.height_ * 4 * bytes_per_channel),
+        .size  = static_cast<VkDeviceSize>(image.width_ * image.height_ * 4
+                                          * bytes_per_channel),
         .usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
         .sharingMode           = VK_SHARING_MODE_EXCLUSIVE,
         .queueFamilyIndexCount = 1,
@@ -69,12 +72,14 @@ void init_from_data(void* image_data, int bytes_per_channel, Image& image)
                     nullptr);
     void* data;
     vmaMapMemory(g_allocator, staging_allocation, &data);
-    std::memcpy(data, image_data, image.width_ * image.height_ * 4 * bytes_per_channel);
+    std::memcpy(
+        data, image_data, image.width_ * image.height_ * 4 * bytes_per_channel);
 
     VkImageCreateInfo image_info{
         .sType       = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
         .imageType   = VK_IMAGE_TYPE_2D,
-        .format      = bytes_per_channel == 1 ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R32G32B32A32_SFLOAT,
+        .format      = bytes_per_channel == 1 ? VK_FORMAT_R8G8B8A8_SRGB
+                                              : VK_FORMAT_R32G32B32A32_SFLOAT,
         .extent      = image.extent3_,
         .mipLevels   = 1,
         .arrayLayers = 1,
@@ -209,9 +214,12 @@ Image Image::create_from_exr(char const* path)
     Image image;
     image.hdr_ = true;
 
-    float* rgba = nullptr;
+    float* rgba       = nullptr;
     char const* error = nullptr;
-    if (LoadEXRWithLayer(&rgba, &image.width_, &image.height_, path, nullptr, &error) < 0 || !rgba)
+    if (LoadEXRWithLayer(
+            &rgba, &image.width_, &image.height_, path, nullptr, &error)
+            < 0
+        || !rgba)
     {
         if (error)
         {
