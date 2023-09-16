@@ -452,4 +452,5 @@ void UI::reset_viewports()
 {
     left_preview_.reset_viewport();
     right_preview_.reset_viewport();
+    error_preview_.reset_viewport();
 }
