@@ -58,7 +58,7 @@ private:
     float error_histogram_[32] = {};
     float error_max_           = 0.f;
     float exposure_            = 0.f;
-    Tonemap tonemap_           = Tonemap::ACES;
+    Tonemap tonemap_           = Tonemap::Hable;
     ColorMap color_map_        = ColorMap::Magma;
     bool active_               = false;
     bool viewport_dirty_       = false;

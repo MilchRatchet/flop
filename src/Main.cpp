@@ -282,10 +282,11 @@ int main(int argc, char const* argv[])
                    "Exposure to apply to an HDR image (log 2 stops)");
 
     std::unordered_map<std::string, Tonemap> tonemappers{
+        {"None", Tonemap::None},
         {"ACES", Tonemap::ACES},
         {"Reinhard", Tonemap::Reinhard},
         {"Hable", Tonemap::Hable}};
-    Tonemap tonemap = Tonemap::ACES;
+    Tonemap tonemap = Tonemap::Hable;
     app.add_option("--tonemapper", tonemap, "HDR to LDR tonemapping operator")
         ->transform(CLI::CheckedTransformer(tonemappers, CLI::ignore_case));
 
