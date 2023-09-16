@@ -22,6 +22,7 @@
 #include <FeatureFilterY_spv.h>
 #include <Summarize_spv.h>
 #include <YyCxCz_spv.h>
+#include <ZeroHistogram_spv.h>
 
 static char const* s_error = "";
 #ifdef NDEBUG
@@ -157,7 +158,7 @@ int flop_init(uint32_t instanceExtensionCount,
 
     create_kernels();
 
-    g_error_histogram = Buffer::create(sizeof(uint32_t) * 32);
+    g_error_histogram = Buffer::create(sizeof(uint32_t) * 64);
 
     upload_color_maps();
 
@@ -496,6 +497,9 @@ void create_kernels()
     g_feature_filter_y = Kernel::create(
         FeatureFilterY_spv_data, FeatureFilterY_spv_size, 1, 64, true);
 
+    g_zero_histogram = Kernel::create(
+        ZeroHistogram_spv_data, ZeroHistogram_spv_size, 8, 8, false);
+
     g_summarize
         = Kernel::create(Summarize_spv_data, Summarize_spv_size, 8, 8, false);
 }
@@ -831,6 +835,21 @@ int flop_analyze_impl(char const* reference_path,
                          transfers);
 
     // Compute a histogram of the final error map
+    g_zero_histogram.dispatch(cb, g_error, g_error_histogram);
+
+    transfers[0] = g_error.raw_barrier();
+    vkCmdPipelineBarrier(cb,
+                         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
+                         0,
+                         0,
+                         nullptr,
+                         0,
+                         nullptr,
+                         1,
+                         transfers);
+
+    // Compute a histogram of the final error map
     g_summarize.dispatch(cb, g_error, g_error_histogram);
 
     if (output_path)
@@ -947,11 +966,11 @@ int flop_analyze_impl(char const* reference_path,
     std::cout << "Evaluation time: " << elapsed << "ms\n"
               << "Error histogram: \n[";
 
-    uint32_t histogram[32];
-    std::memcpy(histogram, g_error_histogram.data_, sizeof(uint32_t) * 32);
+    uint32_t histogram[64];
+    std::memcpy(histogram, g_error_histogram.data_, sizeof(uint32_t) * 64);
     std::printf("%i", histogram[0]);
     uint32_t sample_count = histogram[0];
-    for (uint32_t i = 1; i != 32u; ++i)
+    for (uint32_t i = 1; i != 64u; ++i)
     {
         std::printf(", %i", histogram[i]);
     }

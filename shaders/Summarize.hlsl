@@ -15,8 +15,8 @@ RWTexture2D<float4> rwtextures[];
 [[vk::binding(2)]]
 RWByteAddressBuffer rwbuffers[];
 
-// Construct an LDS histogram with 32 entries
-#define BUCKET_COUNT 32
+// Construct an LDS histogram with 64 entries
+#define BUCKET_COUNT 64
 groupshared uint histogram[BUCKET_COUNT];
 
 [numthreads(8, 8, 1)]

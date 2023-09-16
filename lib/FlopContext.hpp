@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Buffer.hpp"
+#include "Fullscreen.hpp"
 #include "Image.hpp"
 #include "Kernel.hpp"
-#include "Fullscreen.hpp"
 
 namespace flop
 {
@@ -32,6 +32,7 @@ inline Kernel g_csf_filter_y;
 inline Kernel g_color_compare;
 inline Kernel g_feature_filter_x;
 inline Kernel g_feature_filter_y;
+inline Kernel g_zero_histogram;
 inline Kernel g_summarize;
 inline Fullscreen g_yycxcz;
 inline Fullscreen g_error_color_map;

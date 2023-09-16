@@ -123,18 +123,35 @@ bool UI::analyze(bool issued_from_gui)
     error_preview_.set_image(g_error);
     error_preview_.set_quadrant(Preview::Quadrant::TopLeft);
     error_preview_.set_color_map(color_map_);
-    viewport_dirty_ = true;
-    active_         = true;
-    error_max_      = 0.f;
-    for (size_t i = 0; i != 32; ++i)
+    viewport_dirty_       = true;
+    active_               = true;
+    error_max_occurrence_ = 0.f;
+    error_max_            = 0.f;
+
+    double error_sum_       = 0.f;
+    uint64_t total_samples_ = 0;
+
+    for (size_t i = 0; i < 64; ++i)
     {
         error_histogram_[i] = static_cast<uint32_t*>(g_error_histogram.data_)[i];
 
-        if (error_histogram_[i] > error_max_)
+        const float error = i / (64.0f - 1.0f);
+
+        if (error_histogram_[i] > error_max_occurrence_)
         {
-            error_max_ = error_histogram_[i];
+            error_max_occurrence_ = error_histogram_[i];
         }
+
+        if (error_histogram_[i] > 0)
+        {
+            error_max_ = error;
+        }
+
+        error_sum_ += error_histogram_[i] * error;
+        total_samples_ += error_histogram_[i];
     }
+
+    error_mean_ = error_sum_ / total_samples_;
 
     if (issued_from_gui)
     {
@@ -368,16 +385,21 @@ void UI::update()
 
             ImGui::Spacing();
 
-            ImGui::PlotHistogram("Error histogram",
-                                 error_histogram_,
-                                 32,
-                                 0,
-                                 nullptr,
-                                 0.f,
-                                 error_max_,
-                                 ImVec2(std::min(size.x / 3.4f, 300.f),
-                                        std::min(size.y / 4, 140.f)),
-                                 4);
+            ImGui::PlotHistogram(
+                "Error histogram",
+                error_histogram_,
+                64,
+                0,
+                nullptr,
+                0.f,
+                error_max_occurrence_,
+                ImVec2(std::min(size.x / 3, 500.f), std::min(size.y / 4, 140.f)),
+                4);
+
+            ImGui::Spacing();
+
+            ImGui::Text("Mean Error: %f", error_mean_);
+            ImGui::Text("Max. Error: %f", error_max_);
         }
     }
     ImGui::End();
