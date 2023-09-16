@@ -16,6 +16,7 @@ struct Rect2D
 
 enum class Tonemap : int
 {
+    None     = 0,
     ACES     = 1,
     Reinhard = 2,
     Hable    = 3,
@@ -69,7 +70,7 @@ private:
     double cursor_[2]            = {0, 0};
     float old_uv_offset_[2]      = {0.f, 0.f};
     float exposure_              = 1.f;
-    Tonemap tonemap_             = Tonemap::ACES;
+    Tonemap tonemap_             = Tonemap::Hable;
     uint32_t color_map_          = 0;
     bool use_color_map_          = false;
     bool pan_active_             = false;

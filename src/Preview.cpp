@@ -3,8 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <Kernel.hpp>
 #include <algorithm>
-#include <iostream>
 #include <cassert>
+#include <iostream>
 
 #include <PreviewPSColorMap_spv.h>
 #include <PreviewPS_spv.h>
@@ -208,20 +208,19 @@ void Preview::set_viewport(Rect2D viewport)
 
     switch (quadrant_)
     {
-        using enum Quadrant;
-    case TopLeft:
+    case Quadrant::TopLeft:
         preview_viewport_.x = viewport.x1;
         preview_viewport_.y = viewport.y1;
         break;
-    case TopRight:
+    case Quadrant::TopRight:
         preview_viewport_.x = (viewport.x2 - viewport.x1) * 0.5f;
         preview_viewport_.y = viewport.y1;
         break;
-    case BottomRight:
+    case Quadrant::BottomRight:
         preview_viewport_.x = (viewport.x2 - viewport.x1) * 0.5f;
         preview_viewport_.y = (viewport.y2 - viewport.y1) * 0.5f;
         break;
-    case BottomLeft:
+    case Quadrant::BottomLeft:
         preview_viewport_.x = viewport.x1;
         preview_viewport_.y = (viewport.y2 - viewport.y1) * 0.5f;
         break;
@@ -313,13 +312,12 @@ void Preview::render(GLFWwindow* window, VkCommandBuffer cb)
             = old_uv_offset_[1] - delta_y * uv_scale_ / preview_viewport_.height;
     }
 
-    PushConstants push_constants{
-        .uv_offset = {uv_offset_[0], uv_offset_[1]},
-        .uv_scale  = uv_scale_,
-        .input     = image_->index_,
-        .color_map = color_map_,
-        .tonemap   = image_->hdr_ ? static_cast<uint32_t>(tonemap_) : 0u,
-        .exposure  = exposure_};
+    PushConstants push_constants{.uv_offset = {uv_offset_[0], uv_offset_[1]},
+                                 .uv_scale  = uv_scale_,
+                                 .input     = image_->index_,
+                                 .color_map = color_map_,
+                                 .tonemap   = static_cast<uint32_t>(tonemap_),
+                                 .exposure  = exposure_};
     vkCmdPushConstants(cb,
                        s_pipeline_layout,
                        VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,

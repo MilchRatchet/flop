@@ -250,10 +250,7 @@ void UI::update()
         ImGui::Spacing();
         ImGui::Separator();
 
-        bool hdr = g_reference.source_.hdr_;
-        ImGui::BeginDisabled(!hdr);
-
-        if (ImGui::SliderFloat("Exposure", &exposure_, -15.f, 3.f))
+        if (ImGui::SliderFloat("Exposure", &exposure_, -15.f, 10.f))
         {
             float exposure = std::pow(2.f, exposure_);
             left_preview_.set_exposure(exposure);
@@ -262,6 +259,11 @@ void UI::update()
 
         Tonemap previous_tonemap = tonemap_;
         ImGui::Text("Tonemapping operator");
+        if (ImGui::RadioButton("None", tonemap_ == Tonemap::None))
+        {
+            tonemap_ = Tonemap::None;
+        }
+        ImGui::SameLine();
         if (ImGui::RadioButton("ACES", tonemap_ == Tonemap::ACES))
         {
             tonemap_ = Tonemap::ACES;
@@ -282,8 +284,6 @@ void UI::update()
             left_preview_.set_tonemap(tonemap_);
             right_preview_.set_tonemap(tonemap_);
         }
-
-        ImGui::EndDisabled();
 
         ImGui::Checkbox("Toggle positions", &toggled_);
         ImGui::SameLine();

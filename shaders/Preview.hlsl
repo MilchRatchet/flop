@@ -71,17 +71,19 @@ PSOutput PSMain(VSOutput IN)
 #else
     float4 color = textures[constants.input].Sample(texture_sampler, IN.uv);
 
+    color.rgb *= constants.exposure;
+
     if (constants.tonemap == 1)
     {
-        color.rgb = aces_tonemap(constants.exposure * color.rgb);
+        color.rgb = aces_tonemap(color.rgb);
     }
     else if (constants.tonemap == 2)
     {
-        color.rgb = reinhard_tonemap(constants.exposure * color.rgb);
+        color.rgb = reinhard_tonemap(color.rgb);
     }
     else if (constants.tonemap == 3)
     {
-        color.rgb = hable_tonemap(constants.exposure * color.rgb);
+        color.rgb = hable_tonemap(color.rgb);
     }
 
     OUT.color = color;
