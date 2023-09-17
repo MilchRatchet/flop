@@ -187,6 +187,31 @@ void UI::update()
             reset_viewports();
             analyze(true);
         }
+
+        ImGui::SameLine();
+        // Since !disabled, test_path is not null.
+        if (ImGui::Button("Refresh"))
+        {
+            {
+                flop_init_test(test_path_);
+                toggled_ = false;
+                right_preview_.set_image(g_test.source_);
+                right_preview_.set_quadrant(Preview::Quadrant::BottomRight);
+                reset_viewports();
+                viewport_dirty_ = true;
+                active_         = false;
+
+                if (g_reference.source_.width_ != g_test.source_.width_
+                    || g_reference.source_.height_ != g_test.source_.height_)
+                {
+                    g_reference.source_.reset();
+                    g_error.reset();
+                }
+            }
+
+            analyze(true);
+        }
+
         if (!disabled)
         {
             ImGui::PopStyleColor(3);
