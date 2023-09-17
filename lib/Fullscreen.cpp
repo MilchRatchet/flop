@@ -99,7 +99,7 @@ void Fullscreen::init(uint8_t const* shader_bytecode,
         .dynamicStateCount = 2,
         .pDynamicStates    = dynamic_states};
 
-    VkFormat color_target = VK_FORMAT_R8G8B8A8_SRGB;
+    VkFormat color_target = VK_FORMAT_R32G32B32A32_SFLOAT;
     VkPipelineRenderingCreateInfoKHR rendering_info{
         .sType = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR,
         .colorAttachmentCount    = 1,
@@ -141,7 +141,9 @@ void Fullscreen::reset()
     }
 }
 
-void Fullscreen::render(VkCommandBuffer cb, Image const& color_target, void* push_constants) const
+void Fullscreen::render(VkCommandBuffer cb,
+                        Image const& color_target,
+                        void* push_constants) const
 {
     VkRect2D render_area = {.offset = {}, .extent = color_target.extent2_};
     VkRenderingAttachmentInfoKHR attachment{
@@ -161,10 +163,10 @@ void Fullscreen::render(VkCommandBuffer cb, Image const& color_target, void* pus
     };
     vkCmdBeginRenderingKHR(cb, &rendering_info);
 
-    VkViewport viewport{.x        = 0,
-                        .y        = 0,
-                        .width    = static_cast<float>(render_area.extent.width),
-                        .height   = static_cast<float>(render_area.extent.height),
+    VkViewport viewport{.x      = 0,
+                        .y      = 0,
+                        .width  = static_cast<float>(render_area.extent.width),
+                        .height = static_cast<float>(render_area.extent.height),
                         .minDepth = 0.f,
                         .maxDepth = 1.f};
     vkCmdSetViewport(cb, 0, 1, &viewport);
