@@ -55,7 +55,7 @@ private:
     nfdchar_t* output_path_     = nullptr;
     double last_toggled_        = 0.0;
     float toggle_interval_s_    = 0.75f;
-    float error_histogram_[64]  = {};
+    float error_histogram_[256] = {};
     float error_max_            = 0.f;
     float error_max_occurrence_ = 0.f;
     float error_mean_           = 0.f;

@@ -158,7 +158,7 @@ int flop_init(uint32_t instanceExtensionCount,
 
     create_kernels();
 
-    g_error_histogram = Buffer::create(sizeof(uint32_t) * 64);
+    g_error_histogram = Buffer::create(sizeof(uint32_t) * 256);
 
     upload_color_maps();
 
@@ -498,10 +498,9 @@ void create_kernels()
         FeatureFilterY_spv_data, FeatureFilterY_spv_size, 1, 64, true);
 
     g_zero_histogram = Kernel::create(
-        ZeroHistogram_spv_data, ZeroHistogram_spv_size, 8, 8, false);
-
+        ZeroHistogram_spv_data, ZeroHistogram_spv_size, 16, 16, false);
     g_summarize
-        = Kernel::create(Summarize_spv_data, Summarize_spv_size, 8, 8, false);
+        = Kernel::create(Summarize_spv_data, Summarize_spv_size, 16, 16, false);
 }
 
 char const* flop_get_error()
@@ -966,11 +965,11 @@ int flop_analyze_impl(char const* reference_path,
     std::cout << "Evaluation time: " << elapsed << "ms\n"
               << "Error histogram: \n[";
 
-    uint32_t histogram[64];
-    std::memcpy(histogram, g_error_histogram.data_, sizeof(uint32_t) * 64);
+    uint32_t histogram[256];
+    std::memcpy(histogram, g_error_histogram.data_, sizeof(uint32_t) * 256);
     std::printf("%i", histogram[0]);
     uint32_t sample_count = histogram[0];
-    for (uint32_t i = 1; i != 64u; ++i)
+    for (uint32_t i = 1; i < 256u; ++i)
     {
         std::printf(", %i", histogram[i]);
     }

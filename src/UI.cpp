@@ -131,11 +131,11 @@ bool UI::analyze(bool issued_from_gui)
     double error_sum_       = 0.f;
     uint64_t total_samples_ = 0;
 
-    for (size_t i = 0; i < 64; ++i)
+    for (size_t i = 0; i < 256; ++i)
     {
         error_histogram_[i] = static_cast<uint32_t*>(g_error_histogram.data_)[i];
 
-        const float error = i / (64.0f - 1.0f);
+        const float error = i / (256.0f - 1.0f);
 
         if (error_histogram_[i] > error_max_occurrence_)
         {
@@ -411,14 +411,14 @@ void UI::update()
             ImGui::Spacing();
 
             ImGui::PlotHistogram(
-                "Error histogram",
+                "##ErrorHistogram",
                 error_histogram_,
-                64,
+                256,
                 0,
                 nullptr,
                 0.f,
                 error_max_occurrence_,
-                ImVec2(std::min(size.x / 3, 500.f), std::min(size.y / 4, 140.f)),
+                ImVec2(std::min(size.x / 2, 800.f), std::min(size.y / 3, 200.f)),
                 4);
 
             ImGui::Spacing();

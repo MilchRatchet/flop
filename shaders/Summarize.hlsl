@@ -15,14 +15,14 @@ RWTexture2D<float4> rwtextures[];
 [[vk::binding(2)]]
 RWByteAddressBuffer rwbuffers[];
 
-// Construct an LDS histogram with 64 entries
-#define BUCKET_COUNT 64
+// Construct an LDS histogram with 256 entries
+#define BUCKET_COUNT 256
 groupshared uint histogram[BUCKET_COUNT];
 
-[numthreads(8, 8, 1)]
+[numthreads(16, 16, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID, uint3 gtid : SV_GroupThreadID)
 {
-    uint linear_gtid = gtid.x * 8 + gtid.y;
+    uint linear_gtid = gtid.x * 16 + gtid.y;
     if (linear_gtid < BUCKET_COUNT)
     {
         histogram[linear_gtid] = 0;
